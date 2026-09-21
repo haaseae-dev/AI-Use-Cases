@@ -34,7 +34,7 @@ Columns in `Use Cases`, in order:
 | `Build` | "How it was built" paragraph on the detail page |
 | `Tools` | Comma-separated |
 | `Level` | `Intro` / `Intermediate` / `Expert` — shown on detail page only; **the Level filter dropdown was deliberately removed** per explicit request, don't re-add without asking |
-| `TimeBucket` | Must be exactly one of `Under 15 min`, `15–60 min`, `1–4 hrs`, `Days+` (note the en-dash). Anything else silently fails to appear in the Time filter dropdown (known live data bug: one row currently has `"4–5 hrs"`, not a valid bucket) |
+| `TimeBucket` | Must be exactly one of `Under 15 min`, `15–60 min`, `1–4 hrs`, `4–8 hrs`, `Days+` (note the en-dash). Anything else silently fails to appear in the Time filter dropdown. (`4–8 hrs` was added to `TIME_ORDER` in `index.html` specifically to give the "Notes to Executive Deck" row, previously the invalid `"4–5 hrs"`, a real home — that Sheet row still needs to be updated to the new exact string) |
 | `TimeDetail` | Optional free-text elaboration |
 | `Outcome`, `Lessons` | Detail-page sections, shown only if non-empty |
 | `Status` | Gates visibility — see "Publish gating" below. Also drives a small, undocumented-until-now UI hint: if the value contains the substring `"coming"` (case-insensitive, e.g. `"Coming Soon"`), the list card appends `" · coming soon"` next to the author name. This is separate from the Draft/blank publish gate — a row can be both publishable and marked "coming soon" at the same time. |
