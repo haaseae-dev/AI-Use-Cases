@@ -290,7 +290,7 @@
 
   function isPublishable(status){
     var s = (status || "").trim().toLowerCase();
-    return s !== "" && s !== "draft";
+    return s === "live" || s.indexOf("coming") !== -1;
   }
   function isComplete(r){
     return !!(r.Title && r.Title.trim() && r.Type && r.Type.trim() && r.Problem && r.Problem.trim()

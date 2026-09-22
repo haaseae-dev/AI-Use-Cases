@@ -37,7 +37,7 @@ Columns in `Use Cases`, in order:
 | `TimeBucket` | Must be exactly one of `Under 15 min`, `15–60 min`, `1–4 hrs`, `4–8 hrs`, `Days+` (note the en-dash). Anything else silently fails to appear in the Time filter dropdown. (`4–8 hrs` was added to `TIME_ORDER` in `index.html` specifically to give the "Notes to Executive Deck" row, previously the invalid `"4–5 hrs"`, a real home — that Sheet row still needs to be updated to the new exact string) |
 | `TimeDetail` | Optional free-text elaboration |
 | `Outcome`, `Lessons` | Detail-page sections, shown only if non-empty |
-| `Status` | Gates visibility — see "Publish gating" below. Also drives a small, undocumented-until-now UI hint: if the value contains the substring `"coming"` (case-insensitive, e.g. `"Coming Soon"`), the list card appends `" · coming soon"` next to the author name. This is separate from the Draft/blank publish gate — a row can be both publishable and marked "coming soon" at the same time. |
+| `Status` | Gates visibility — see "Publish gating" below. Only 3 values do anything meaningful: `Draft` (or blank) hides the row; `Live` (exact match) publishes it normally; anything containing `"coming"` (e.g. `"Coming Soon"`) publishes it with a `" · coming soon"` tag next to the author name. Anything else is treated as not-ready and hidden, same as `Draft`. |
 | `ImageURLs` | Comma-separated direct image links. **First image does double duty**: it's both the small thumbnail on the list card AND the first slide in the detail-page carousel. This was an explicit decision — don't build a separate "icon" field. |
 | `ImageURL-Label` | One caption for the whole image set, not per-image |
 | `HowToGuide` | Full guide, written in plain markdown, rendered inline via a small custom markdown parser in the JS (supports `#`/`##`/`###`, `**bold**`, `*italic*`, `> quote`, `-`/`1.` lists, `[link](url)`, `---`). Deliberately NOT a full markdown spec — no tables, no nested lists |
@@ -48,7 +48,7 @@ Columns in `Use Cases`, in order:
 ### Publish gating (deliberate, don't remove)
 
 A row only appears on the site if BOTH:
-1. `Status` is not blank and not `Draft` (case-insensitive) — this is the manual "I'm still working on it" switch
+1. `Status` is exactly `Live` (case-insensitive), OR contains the word "coming" (e.g. `Coming Soon`, shown with a "· coming soon" tag) — anything else (blank, `Draft`, typos like `Done`/`Complete`, anything not on the intended 3-value list) is treated as not ready and hidden. This was deliberately tightened from an earlier, more permissive version that published on anything non-blank/non-Draft — the intent is a strict allowlist, not a denylist.
 2. `Title`, `Type`, `Problem`, `Tools`, and `TimeBucket` are all non-empty — automatic backstop even if Status is set too early
 
 If anything is hidden for being incomplete, the site shows a small message near the top of the page saying so. This was built specifically because Xan and Brit wanted a check before half-finished rows went live, without needing a second tool.
