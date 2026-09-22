@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[working name] — real AI use cases from working PMs</title>
-<meta name="description" content="A running collection of real AI use cases — from Xan Schutz & Brit Vorreiter's PMI 2026 session, and still growing.">
+<title>[working name] — real AI use cases, real builders</title>
+<meta name="description" content="A running collection of real AI use cases — started at PMI 2026 by Xan Schutz & Brit Vorreiter, and still growing.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -229,7 +229,7 @@
 (function(){
   var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR32mpK71jkRASGdz7pGvYlSHdVZjklf8-YYKd76sVI-Bar-OOhbo9tA6hEfq4XhA/pub?gid=962151949&single=true&output=csv";
 
-  var TIME_ORDER = ["Under 15 min", "15–60 min", "1–4 hrs", "Days+"];
+  var TIME_ORDER = ["Under 15 min", "15–60 min", "1–4 hrs", "4–8 hrs", "Days+"];
   var TYPE_COLORS = ["indigo", "coral", "mint", "amber", "sky"];
   var STORAGE_KEY = "usecases-cache-v4";
 
@@ -290,7 +290,7 @@
 
   function isPublishable(status){
     var s = (status || "").trim().toLowerCase();
-    return s !== "" && s !== "draft";
+    return s === "live" || s.indexOf("coming") !== -1;
   }
   function isComplete(r){
     return !!(r.Title && r.Title.trim() && r.Type && r.Type.trim() && r.Problem && r.Problem.trim()
