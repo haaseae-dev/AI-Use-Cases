@@ -35,7 +35,7 @@ Columns in `Use Cases`, in order:
 | `Build` | "How it was built" paragraph on the detail page |
 | `Tools` | Comma-separated |
 | `Level` | `Intro` / `Intermediate` / `Expert` — shown on detail page only; **the Level filter dropdown was deliberately removed** per explicit request, don't re-add without asking |
-| `TimeBucket` | Must be exactly one of `Under 15 min`, `15–60 min`, `1–4 hrs`, `4–8 hrs`, `Days+` (note the en-dash). Anything else silently fails to appear in the Time filter dropdown. (`4–8 hrs` was added to `TIME_ORDER` in `index.html` specifically to give the "Notes to Executive Deck" row, previously the invalid `"4–5 hrs"`, a real home — that Sheet row still needs to be updated to the new exact string) |
+| `Total Effort` | Renamed from `TimeBucket` during the v1 content pass (same column, new label — `index.html` reads it by this exact header name now). Must be exactly one of `Under 15 min`, `15–60 min`, `1–4 hrs`, `4–8 hrs`, `Days+` (note the en-dash). Anything else silently fails to appear in the Time filter dropdown. |
 | `TimeDetail` | Optional free-text elaboration |
 | `Outcome`, `Lessons` | Detail-page sections, shown only if non-empty |
 | `Status` | Gates visibility — see "Publish gating" below. Only 3 values do anything meaningful: `Draft` (or blank) hides the row; `Live` (exact match) publishes it normally; anything containing `"coming"` (e.g. `"Coming Soon"`) publishes it with a `" · coming soon"` tag next to the author name. Anything else is treated as not-ready and hidden, same as `Draft`. |
@@ -50,7 +50,7 @@ Columns in `Use Cases`, in order:
 
 A row only appears on the site if BOTH:
 1. `Status` is exactly `Live` (case-insensitive), OR contains the word "coming" (e.g. `Coming Soon`, shown with a "· coming soon" tag) — anything else (blank, `Draft`, typos like `Done`/`Complete`, anything not on the intended 3-value list) is treated as not ready and hidden. This was deliberately tightened from an earlier, more permissive version that published on anything non-blank/non-Draft — the intent is a strict allowlist, not a denylist.
-2. `Title`, `Type`, `Problem`, `Tools`, and `TimeBucket` are all non-empty — automatic backstop even if Status is set too early
+2. `Title`, `Type`, `Problem`, `Tools`, and `Total Effort` are all non-empty — automatic backstop even if Status is set too early
 
 If anything is hidden for being incomplete, the site shows a small message near the top of the page saying so. This was built specifically because Xan and Brit wanted a check before half-finished rows went live, without needing a second tool.
 
@@ -78,7 +78,7 @@ If anything is hidden for being incomplete, the site shows a small message near 
 
 - Site still says `[working name]` — no name has been chosen.
 - `Column Guide` tab in the Sheet is stale (see schema table above).
-- Two data-quality typos live in the Sheet right now (see `Type` and `TimeBucket` rows above) — need manual fixing in the Sheet, not code.
+- One data-quality typo lives in the Sheet right now (a `Total Effort` row reading `5–8 hrs` instead of `4–8 hrs`) — needs manual fixing in the Sheet, not code.
 - Whether to trim the `Build` ("How it was built") summary down to a one-line teaser for rows that already have a full `HowToGuide` or `PromptFileURL` — discussed, not decided.
 - No custom domain — using the default `github.io` URL. A rename of the GitHub repo was deferred until a final site name is chosen (renaming the repo changes the live URL, which would break the printed QR code).
 
