@@ -294,7 +294,7 @@
   }
   function isComplete(r){
     return !!(r.Title && r.Title.trim() && r.Type && r.Type.trim() && r.Problem && r.Problem.trim()
-      && r.Tools && r.Tools.trim() && r.TimeBucket && r.TimeBucket.trim());
+      && r.Tools && r.Tools.trim() && r["Total Effort"] && r["Total Effort"].trim());
   }
 
   function normalizeRows(rows){
@@ -313,7 +313,7 @@
         build: (r.Build || "").trim(),
         tools: splitList(r.Tools),
         level: (r.Level || "Intro").trim(),
-        timeBucket: (r.TimeBucket || "").trim(),
+        timeBucket: (r["Total Effort"] || "").trim(),
         timeDetail: (r.TimeDetail || "").trim(),
         outcome: (r.Outcome || "").trim(),
         lessons: (r.Lessons || "").trim(),
@@ -550,7 +550,7 @@
     } else if (fromCache){
       showStatus("Showing the last saved version — couldn't reach the live sheet just now.", true);
     } else if (allCases.hiddenIncomplete > 0){
-      showStatus(allCases.hiddenIncomplete + " entr" + (allCases.hiddenIncomplete === 1 ? "y is" : "ies are") + " saved but not shown yet — fill in Title, Type, Problem, Tools, and TimeBucket, then set Status to Live.", true);
+      showStatus(allCases.hiddenIncomplete + " entr" + (allCases.hiddenIncomplete === 1 ? "y is" : "ies are") + " saved but not shown yet — fill in Title, Type, Problem, Tools, and Total Effort, then set Status to Live.", true);
     } else {
       showStatus("");
     }
