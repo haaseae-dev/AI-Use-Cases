@@ -63,7 +63,7 @@
   #status-msg.error{color:#9a5b12;}
 
   /* ---------- grid + list cards ---------- */
-  .grid{display:grid;grid-template-columns:1fr;gap:16px;padding:22px 0 70px;align-items:start;}
+  .grid{display:grid;grid-template-columns:1fr;gap:16px;padding:22px 0 70px;align-items:stretch;}
   @media (min-width:680px){ .grid{grid-template-columns:repeat(2,1fr);} }
   .list-card{
     display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:16px;
@@ -81,7 +81,7 @@
     display:flex;align-items:center;justify-content:center;color:var(--ink-soft);background:var(--bg);
   }
   .list-thumb-placeholder svg{width:24px;height:24px;opacity:0.6;}
-  .list-card-text{flex:1;min-width:0;padding:16px;}
+  .list-card-text{flex:1;min-width:0;padding:16px;display:flex;flex-direction:column;}
   .list-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(28,26,46,0.06);}
   .list-card:focus-visible{outline:2px solid var(--indigo);outline-offset:2px;}
   .cat-chip{align-self:flex-start;display:inline-block;font-weight:700;font-size:11px;padding:4px 11px;border-radius:999px;margin-bottom:11px;}
@@ -95,9 +95,12 @@
   .list-body{font-size:13.5px;color:var(--ink-soft);margin:0 0 12px;line-height:1.55;
     display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
   .list-meta{display:flex;gap:6px;flex-wrap:wrap;font-size:11.5px;font-weight:600;margin-bottom:12px;}
-  .chip{border:1px solid var(--border);padding:3px 10px;border-radius:999px;color:var(--ink-soft);}
+  .chip{border:1px solid var(--border);padding:3px 10px;border-radius:999px;color:var(--ink-soft);font-size:11.5px;font-weight:600;}
   .list-foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-soft);font-weight:600;
-    border-top:1px solid var(--border);padding-top:12px;}
+    border-top:1px solid var(--border);padding-top:12px;margin-top:auto;}
+  .list-foot-stats{display:flex;align-items:center;gap:12px;}
+  .list-foot-stats .stat-inline{font-size:12px;}
+  .list-foot-stats .stat-inline svg{width:13px;height:13px;}
 
   .empty-state{text-align:center;padding:60px 20px;color:var(--ink-soft);font-size:14px;grid-column:1/-1;}
   .empty-state button{margin-top:12px;background:var(--ink);color:var(--bg);border:none;padding:9px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;}
@@ -130,12 +133,11 @@
   .hero-placeholder .sub{font-size:11.5px;color:var(--ink-soft);opacity:0.8;}
   .image-caption{font-size:12px;color:var(--ink-soft);margin:0 0 16px;}
 
-  .detail-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:16px;}
-  .detail-topbar .back-link{margin-bottom:0;}
-  .detail-byline{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .detail-bottom-byline{display:flex;justify-content:flex-end;padding-top:18px;margin-top:6px;border-top:1px solid var(--border);}
+  .detail-byline{display:flex;align-items:center;gap:8px;flex-shrink:0;text-decoration:none;}
   .detail-byline-text{display:flex;flex-direction:column;align-items:flex-start;gap:1px;}
-  .detail-byline-name{font-size:12.5px;font-weight:700;color:var(--ink);}
-  .detail-byline-date{font-size:11.5px;color:var(--ink-soft);}
+  .detail-byline-name{font-size:12.5px;font-weight:700;color:var(--ink);text-decoration:underline;}
+  .detail-byline-date{font-size:11.5px;color:var(--ink-soft);text-decoration:none;}
 
   .car-thumbs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 16px;}
   .car-thumb{width:76px;height:43px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;display:block;padding:0;background:none;}
@@ -391,6 +393,12 @@
     var typeChip = c.type ? '<span class="cat-chip ' + colorClass + '">' + c.type + '</span>' : "";
     var toolTags = c.tools.map(function(t){ return '<span class="chip">' + t + '</span>'; }).join("");
     var comingSoon = c.status && c.status.toLowerCase().indexOf("coming") !== -1 ? " · coming soon" : "";
+    var footTimeBit = c.timeBucket
+      ? '<span class="stat-inline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Spent ' + c.timeBucket + '</span>'
+      : "";
+    var footSavedBit = c.timeSaved
+      ? '<span class="stat-inline saved"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>Saved ' + c.timeSaved + '</span>'
+      : "";
     var thumbChrome = '<div class="thumb-chrome"><span></span><span></span><span></span></div>';
     var thumb = '<div class="list-thumb-wrap"><div class="thumb-frame">' + thumbChrome + (c.images.length
       ? '<img class="list-thumb" src="' + c.images[0] + '" alt="">'
@@ -403,7 +411,7 @@
           '<h3 class="list-title">' + c.title + '</h3>' +
           '<p class="list-body">' + c.problem + '</p>' +
           '<div class="list-meta">' + toolTags + '</div>' +
-          '<div class="list-foot"><span>' + c.author + comingSoon + '</span><span>' + (c.timeBucket ? 'Effort: ' + c.timeBucket : "") + (c.timeSaved ? ' <span style="color:#0C7A6D">&middot; Saved ' + c.timeSaved + '</span>' : "") + '</span></div>' +
+          '<div class="list-foot"><span>' + c.author + comingSoon + '</span><div class="list-foot-stats">' + footTimeBit + footSavedBit + '</div></div>' +
         '</div>' +
       '</a>'
     );
@@ -530,13 +538,14 @@
       : '<div class="detail-byline">' + bylineInner + '</div>';
 
     detailContent.innerHTML =
-      '<div class="detail-topbar"><button class="back-link" onclick="location.hash=\'\'">← Back to browse</button>' + byline + '</div>' +
+      '<button class="back-link" onclick="location.hash=\'\'">← Back to browse</button>' +
       hero +
       '<div class="detail-top-chips">' + typeChip + levelChip + '</div>' +
       '<h1 class="detail-title">' + c.title + '</h1>' +
       (timePills ? '<div class="stat-row">' + timePills + '</div>' : "") +
       (toolChips ? '<div class="tools-row">' + toolChips + '</div>' : "") +
-      splitCards + cards;
+      splitCards + cards +
+      '<div class="detail-bottom-byline">' + byline + '</div>';
 
     var btn = document.getElementById("howto-btn");
     var panel = document.getElementById("howto-panel");
