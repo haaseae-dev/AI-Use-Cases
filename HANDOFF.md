@@ -36,6 +36,7 @@ Columns in `Use Cases`, in order:
 | `Tools` | Comma-separated |
 | `Level` | `Intro` / `Intermediate` / `Expert` — shown on detail page only; **the Level filter dropdown was deliberately removed** per explicit request, don't re-add without asking |
 | `Total Effort` | Renamed from `TimeBucket` during the v1 content pass (same column, new label — `index.html` reads it by this exact header name now). Must be exactly one of `Under 15 min`, `15–60 min`, `1–4 hrs`, `4–8 hrs`, `Days+` (note the en-dash). Anything else silently fails to appear in the Time filter dropdown. |
+| `Time Saved` | Optional free text (e.g. "20+ hrs", "about a day") — shown as a highlighted mint-colored pill right next to `Total Effort` on the detail page, and appended to the time on the list card footer. Not required for publishing (same as `TimeDetail`/`Outcome`/`Lessons`), just blank if empty. |
 | `TimeDetail` | Optional free-text elaboration |
 | `Outcome`, `Lessons` | Detail-page sections, shown only if non-empty |
 | `Status` | Gates visibility — see "Publish gating" below. Only 3 values do anything meaningful: `Draft` (or blank) hides the row; `Live` (exact match) publishes it normally; anything containing `"coming"` (e.g. `"Coming Soon"`) publishes it with a `" · coming soon"` tag next to the author name. Anything else is treated as not-ready and hidden, same as `Draft`. |
