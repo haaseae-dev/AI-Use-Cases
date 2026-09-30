@@ -290,6 +290,7 @@
   }
 
   function splitList(str){ return (str || "").split(",").map(function(t){return t.trim();}).filter(Boolean); }
+  function isBareUrl(str){ return /^https?:\/\/\S+$/.test((str || "").trim()); }
 
   function isPublishable(status){
     var s = (status || "").trim().toLowerCase();
@@ -466,16 +467,20 @@
       '</div>';
 
     var howTo = "";
-    if (c.howTo){
-      var showLabel = c.howToLabel || "Show the full step-by-step guide";
-      var hideLabel = c.howToLabel ? "Hide it" : "Hide the full guide";
+    if (c.howTo && isBareUrl(c.howTo)){
       howTo =
-        '<button class="howto-toggle" id="howto-btn" type="button" data-show="' + showLabel + '" data-hide="' + hideLabel + '">' + showLabel + '</button>' +
+        '<a class="download-btn" href="' + c.howTo + '" target="_blank" rel="noopener">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
+          'How To Guide' +
+        '</a>';
+    } else if (c.howTo){
+      howTo =
+        '<button class="howto-toggle" id="howto-btn" type="button" data-show="Show the full step-by-step guide" data-hide="Hide it">Show the full step-by-step guide</button>' +
         '<div class="howto-panel" id="howto-panel"><div class="howto-content">' + renderMarkdown(c.howTo) + '</div></div>';
     }
     var downloadBtn = "";
     if (c.guideFileUrl){
-      var label = c.guideFileLabel || "Download the full guide";
+      var label = "Prompt";
       downloadBtn =
         '<a class="download-btn" href="' + c.guideFileUrl + '" target="_blank" rel="noopener">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
