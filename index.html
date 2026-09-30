@@ -132,7 +132,8 @@
 
   .detail-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(22px,4vw,28px);font-weight:800;margin:2px 0 10px;line-height:1.25;}
   .detail-problem{font-size:15px;color:var(--ink-soft);max-width:62ch;margin:0 0 16px;}
-  .detail-meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+  .detail-meta-row{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;}
   .meta-pill{background:var(--card);border:1px solid var(--border);color:var(--ink);font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;}
   .meta-pill.saved{background:var(--mint-tint);border-color:transparent;color:#0C7A6D;}
 
@@ -147,18 +148,15 @@
   .submitted-label{font-size:12px;color:var(--ink-soft);}
   .submitted-row a.li-link{margin-left:auto;font-size:12.5px;font-weight:600;color:var(--indigo);display:flex;align-items:center;gap:4px;}
 
-  .howto-toggle{
-    background:var(--indigo);color:#fff;border:none;padding:12px 20px;border-radius:12px;
-    font-size:13.5px;font-weight:700;cursor:pointer;width:100%;margin-top:2px;
+  .card-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .card-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--indigo-tint);color:var(--indigo);border:none;
+    padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
+    cursor:pointer;text-decoration:none;font-family:inherit;
   }
-  .download-btn{
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    background:var(--card);color:var(--indigo);border:1.5px solid var(--indigo);
-    padding:11px 20px;border-radius:12px;font-size:13.5px;font-weight:700;
-    width:100%;margin-top:10px;text-decoration:none;
-  }
-  .download-btn svg{width:16px;height:16px;flex-shrink:0;}
-  .download-btn:hover{background:var(--indigo-tint);}
+  .card-btn svg{width:13px;height:13px;flex-shrink:0;}
+  .card-btn:hover{background:var(--indigo);color:#fff;}
   .howto-panel{display:none;margin-top:14px;}
   .howto-panel.open{display:block;}
   .howto-content{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;}
@@ -452,36 +450,37 @@
       hero = '<div class="hero-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Screenshot<span class="sub">No screenshot added yet</span></div>';
     }
 
-    var timeBucketPill = c.timeBucket ? '<span class="meta-pill">' + c.timeBucket + '</span>' : "";
+    var timeBucketPill = c.timeBucket ? '<span class="meta-pill">Spent ' + c.timeBucket + '</span>' : "";
     var timeSavedPill = c.timeSaved ? '<span class="meta-pill saved">Saved ' + c.timeSaved + '</span>' : "";
+    var timePills = timeBucketPill + timeSavedPill;
     var restPills = [c.level].concat(c.tools).filter(Boolean).map(function(m){ return '<span class="meta-pill">' + m + '</span>'; }).join("");
-    var metaPills = timeBucketPill + timeSavedPill + restPills;
 
-    var howTo = "";
+    var howToBtn = "";
+    var howToPanel = "";
     if (c.howTo && isBareUrl(c.howTo)){
-      howTo =
-        '<a class="download-btn" href="' + c.howTo + '" target="_blank" rel="noopener">' +
+      howToBtn =
+        '<a class="card-btn" href="' + c.howTo + '" target="_blank" rel="noopener">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
           'How To Guide' +
         '</a>';
     } else if (c.howTo){
-      howTo =
-        '<button class="howto-toggle" id="howto-btn" type="button" data-show="Show the full step-by-step guide" data-hide="Hide it">Show the full step-by-step guide</button>' +
-        '<div class="howto-panel" id="howto-panel"><div class="howto-content">' + renderMarkdown(c.howTo) + '</div></div>';
+      howToBtn = '<button class="card-btn" id="howto-btn" type="button" data-show="Show the full step-by-step guide" data-hide="Hide it">Show the full step-by-step guide</button>';
+      howToPanel = '<div class="howto-panel" id="howto-panel"><div class="howto-content">' + renderMarkdown(c.howTo) + '</div></div>';
     }
-    var downloadBtn = "";
+    var promptBtn = "";
     if (c.guideFileUrl){
-      downloadBtn =
-        '<a class="download-btn" href="' + c.guideFileUrl + '" target="_blank" rel="noopener">' +
+      promptBtn =
+        '<a class="card-btn" href="' + c.guideFileUrl + '" target="_blank" rel="noopener">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
           'Prompt' +
         '</a>';
     }
-    var guideButtons = howTo + downloadBtn;
+    var btnRow = (howToBtn || promptBtn) ? '<div class="card-btn-row">' + howToBtn + promptBtn + '</div>' : "";
+    var guideExtras = btnRow + howToPanel;
 
     var cards = "";
-    if (c.build){ cards += '<div class="detail-card"><h4>How it was built</h4><p>' + c.build + '</p></div>' + guideButtons; }
-    else if (guideButtons){ cards += guideButtons; }
+    if (c.build){ cards += '<div class="detail-card"><h4>How it was built</h4><p>' + c.build + '</p>' + guideExtras + '</div>'; }
+    else if (guideExtras){ cards += '<div class="detail-card">' + guideExtras + '</div>'; }
     if (c.outcome) cards += '<div class="detail-card"><h4>Outcome</h4><p>' + c.outcome + '</p></div>';
     if (c.lessons) cards += '<div class="detail-card"><h4>Lessons learned</h4><p>' + c.lessons + '</p></div>';
     if (c.timeDetail) cards += '<div class="detail-card"><h4>Time invested</h4><p>' + c.timeDetail + '</p></div>';
@@ -500,7 +499,10 @@
       hero + typeChip +
       '<h1 class="detail-title">' + c.title + '</h1>' +
       '<p class="detail-problem">' + c.problem + '</p>' +
-      '<div class="detail-meta-row">' + metaPills + '</div>' +
+      '<div class="detail-meta-row">' +
+        (timePills ? '<div class="pill-row">' + timePills + '</div>' : "") +
+        (restPills ? '<div class="pill-row">' + restPills + '</div>' : "") +
+      '</div>' +
       cards + submittedRow;
 
     var btn = document.getElementById("howto-btn");
