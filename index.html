@@ -260,6 +260,7 @@
 
   var TIME_ORDER = ["Under 15 min", "15–60 min", "1–4 hrs", "4–8 hrs", "Days+"];
   var LEVEL_ORDER = ["Intro", "Intermediate", "Expert"];
+  var PROMPT_DOWNLOAD_THRESHOLD = 500; // chars — longer plain-text prompts become a download instead of an inline toggle
   var TYPE_COLORS = ["indigo", "coral", "mint", "amber", "sky"];
   var STORAGE_KEY = "usecases-cache-v4";
 
@@ -319,6 +320,7 @@
 
   function splitList(str){ return (str || "").split(",").map(function(t){return t.trim();}).filter(Boolean); }
   function isBareUrl(str){ return /^https?:\/\/\S+$/.test((str || "").trim()); }
+  function slugify(str){ return (str || "prompt").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "prompt"; }
 
   function isPublishable(status){
     var s = (status || "").trim().toLowerCase();
@@ -519,6 +521,12 @@
         '<a class="card-btn" href="' + c.guideFileUrl + '" target="_blank" rel="noopener">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
           'Prompt' +
+        '</a>';
+    } else if (c.guideFileUrl && c.guideFileUrl.length > PROMPT_DOWNLOAD_THRESHOLD){
+      promptBtn =
+        '<a class="card-btn" href="data:text/plain;charset=utf-8,' + encodeURIComponent(c.guideFileUrl) + '" download="' + slugify(c.title) + '-prompt.txt">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
+          'Download the Prompt' +
         '</a>';
     } else if (c.guideFileUrl){
       promptBtn = '<button class="card-btn" id="prompt-btn" type="button" data-show="Show the prompt" data-hide="Hide it">Show the prompt</button>';
