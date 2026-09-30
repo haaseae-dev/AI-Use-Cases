@@ -63,14 +63,15 @@
   #status-msg.error{color:#9a5b12;}
 
   /* ---------- grid + list cards ---------- */
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,440px));gap:16px;padding:22px 0 70px;align-items:start;justify-content:center;}
+  .grid{display:grid;grid-template-columns:1fr;gap:16px;padding:22px 0 70px;align-items:start;}
+  @media (min-width:680px){ .grid{grid-template-columns:repeat(2,1fr);} }
   .list-card{
     display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:16px;
     overflow:hidden;color:var(--ink);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;
     text-decoration:none;
   }
   .list-card, .list-card *{text-decoration:none;}
-  .list-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
+  .list-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid var(--border);}
   .list-thumb-placeholder{
     width:100%;aspect-ratio:16/9;border-bottom:1.5px dashed var(--border);
     display:flex;align-items:center;justify-content:center;color:var(--ink-soft);background:var(--bg);
