@@ -9,7 +9,7 @@ A single-page, static website listing real AI use cases built by Xan Schutz and 
 Live at: `https://haaseae-dev.github.io/AI-Use-Cases/`
 Repo: `haaseae-dev/AI-Use-Cases` (public, GitHub Pages, deployed from `main` branch root)
 
-The site currently still says `[working name]` in the header/title — no final name has been chosen yet. Don't treat that as a bug.
+The site is named **Ship It** (set in both `<title>` and the header wordmark in `index.html`).
 
 ## Architecture — read this before changing anything
 
@@ -80,10 +80,9 @@ If anything is hidden for being incomplete, the site shows a small message near 
 
 ## Known open items / cleanup not yet done
 
-- Site still says `[working name]` — no name has been chosen.
 - `Column Guide` tab in the Sheet is stale (see schema table above).
 - Whether to trim the `Build` ("The Solution" card) text down to a one-line teaser for rows that already have a full `HowToGuide` or `PromptFileURL` — discussed, not decided.
-- No custom domain — using the default `github.io` URL. A rename of the GitHub repo was deferred until a final site name is chosen (renaming the repo changes the live URL, which would break the printed QR code).
+- No custom domain — using the default `github.io` URL. The repo itself is still named `AI-Use-Cases`, not `Ship-It` — renaming it would change the live URL and break the printed QR code, so that's a deliberate, separate decision from picking the display name, not something to do automatically just because the site now has a name.
 
 ## If you're Claude Code reading this for the first time
 
