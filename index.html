@@ -463,10 +463,19 @@
         '<button class="howto-toggle" id="howto-btn" type="button" data-show="Show the full step-by-step guide" data-hide="Hide it">Show the full step-by-step guide</button>' +
         '<div class="howto-panel" id="howto-panel"><div class="howto-content">' + renderMarkdown(c.howTo) + '</div></div>';
     }
+    var downloadBtn = "";
+    if (c.guideFileUrl){
+      downloadBtn =
+        '<a class="download-btn" href="' + c.guideFileUrl + '" target="_blank" rel="noopener">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
+          'Prompt' +
+        '</a>';
+    }
+    var guideButtons = howTo + downloadBtn;
 
     var cards = "";
-    if (c.build){ cards += '<div class="detail-card"><h4>How it was built</h4><p>' + c.build + '</p></div>' + howTo; }
-    else if (howTo){ cards += howTo; }
+    if (c.build){ cards += '<div class="detail-card"><h4>How it was built</h4><p>' + c.build + '</p></div>' + guideButtons; }
+    else if (guideButtons){ cards += guideButtons; }
     if (c.outcome) cards += '<div class="detail-card"><h4>Outcome</h4><p>' + c.outcome + '</p></div>';
     if (c.lessons) cards += '<div class="detail-card"><h4>Lessons learned</h4><p>' + c.lessons + '</p></div>';
     if (c.timeDetail) cards += '<div class="detail-card"><h4>Time invested</h4><p>' + c.timeDetail + '</p></div>';
@@ -480,23 +489,13 @@
         liLink +
       '</div>';
 
-    var downloadBtn = "";
-    if (c.guideFileUrl){
-      var label = "Prompt";
-      downloadBtn =
-        '<a class="download-btn" href="' + c.guideFileUrl + '" target="_blank" rel="noopener">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
-          label +
-        '</a>';
-    }
-
     detailContent.innerHTML =
       '<button class="back-link" onclick="location.hash=\'\'">← Back to browse</button>' +
       hero + typeChip +
       '<h1 class="detail-title">' + c.title + '</h1>' +
       '<p class="detail-problem">' + c.problem + '</p>' +
       '<div class="detail-meta-row">' + metaPills + '</div>' +
-      cards + submittedRow + '<div style="height:16px"></div>' + downloadBtn;
+      cards + submittedRow;
 
     var btn = document.getElementById("howto-btn");
     var panel = document.getElementById("howto-panel");
