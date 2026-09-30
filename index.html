@@ -451,21 +451,6 @@
     var restPills = [c.level].concat(c.tools).filter(Boolean).map(function(m){ return '<span class="meta-pill">' + m + '</span>'; }).join("");
     var metaPills = timeBucketPill + timeSavedPill + restPills;
 
-    var cards = "";
-    if (c.build) cards += '<div class="detail-card"><h4>How it was built</h4><p>' + c.build + '</p></div>';
-    if (c.outcome) cards += '<div class="detail-card"><h4>Outcome</h4><p>' + c.outcome + '</p></div>';
-    if (c.lessons) cards += '<div class="detail-card"><h4>Lessons learned</h4><p>' + c.lessons + '</p></div>';
-    if (c.timeDetail) cards += '<div class="detail-card"><h4>Time invested</h4><p>' + c.timeDetail + '</p></div>';
-
-    var liUrl = AUTHOR_LINKS[c.author];
-    var liLink = liUrl ? '<a class="li-link" href="' + liUrl + '" target="_blank" rel="noopener">View profile →</a>' : "";
-    var submittedRow =
-      '<div class="submitted-row">' +
-        '<div class="avatar">' + initials(c.author) + '</div>' +
-        '<div><div class="submitted-name">' + c.author + '</div><div class="submitted-label">Built this use case</div></div>' +
-        liLink +
-      '</div>';
-
     var howTo = "";
     if (c.howTo && isBareUrl(c.howTo)){
       howTo =
@@ -480,13 +465,29 @@
     }
     var downloadBtn = "";
     if (c.guideFileUrl){
-      var label = "Prompt";
       downloadBtn =
         '<a class="download-btn" href="' + c.guideFileUrl + '" target="_blank" rel="noopener">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
-          label +
+          'Prompt' +
         '</a>';
     }
+    var guideButtons = howTo + downloadBtn;
+
+    var cards = "";
+    if (c.build){ cards += '<div class="detail-card"><h4>How it was built</h4><p>' + c.build + '</p></div>' + guideButtons; }
+    else if (guideButtons){ cards += guideButtons; }
+    if (c.outcome) cards += '<div class="detail-card"><h4>Outcome</h4><p>' + c.outcome + '</p></div>';
+    if (c.lessons) cards += '<div class="detail-card"><h4>Lessons learned</h4><p>' + c.lessons + '</p></div>';
+    if (c.timeDetail) cards += '<div class="detail-card"><h4>Time invested</h4><p>' + c.timeDetail + '</p></div>';
+
+    var liUrl = AUTHOR_LINKS[c.author];
+    var liLink = liUrl ? '<a class="li-link" href="' + liUrl + '" target="_blank" rel="noopener">View profile →</a>' : "";
+    var submittedRow =
+      '<div class="submitted-row">' +
+        '<div class="avatar">' + initials(c.author) + '</div>' +
+        '<div><div class="submitted-name">' + c.author + '</div><div class="submitted-label">Built this use case</div></div>' +
+        liLink +
+      '</div>';
 
     detailContent.innerHTML =
       '<button class="back-link" onclick="location.hash=\'\'">← Back to browse</button>' +
@@ -494,7 +495,7 @@
       '<h1 class="detail-title">' + c.title + '</h1>' +
       '<p class="detail-problem">' + c.problem + '</p>' +
       '<div class="detail-meta-row">' + metaPills + '</div>' +
-      cards + submittedRow + '<div style="height:16px"></div>' + howTo + downloadBtn;
+      cards + submittedRow;
 
     var btn = document.getElementById("howto-btn");
     var panel = document.getElementById("howto-panel");
