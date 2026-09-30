@@ -95,8 +95,7 @@
   .list-body{font-size:13.5px;color:var(--ink-soft);margin:0 0 12px;line-height:1.55;
     display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
   .list-meta{display:flex;gap:6px;flex-wrap:wrap;font-size:11.5px;font-weight:600;margin-bottom:12px;}
-  .chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);padding:3px 10px;border-radius:999px;color:var(--ink-soft);}
-  .tool-icon{width:13px;height:13px;flex-shrink:0;}
+  .chip{border:1px solid var(--border);padding:3px 10px;border-radius:999px;color:var(--ink-soft);}
   .list-foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-soft);font-weight:600;
     border-top:1px solid var(--border);padding-top:12px;}
 
@@ -135,7 +134,7 @@
   .detail-problem{font-size:15px;color:var(--ink-soft);max-width:62ch;margin:0 0 16px;}
   .detail-meta-row{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
   .pill-row{display:flex;flex-wrap:wrap;gap:8px;}
-  .meta-pill{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--border);color:var(--ink);font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;}
+  .meta-pill{background:var(--card);border:1px solid var(--border);color:var(--ink);font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;}
   .meta-pill.saved{background:var(--mint-tint);border-color:transparent;color:#0C7A6D;}
 
   .detail-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:14px;}
@@ -245,27 +244,6 @@
     "Xan": "https://www.linkedin.com/in/alexandra-schutz/",
     "Brit": "https://www.linkedin.com/in/britvorreiter/"
   };
-
-  // Optional: map a Tools entry (lowercased, exact match) to a Simple Icons slug
-  // (https://simpleicons.org) for a small brand icon next to the tool name.
-  // Tools with no entry here just show as plain text — add more slugs as needed.
-  var TOOL_ICONS = {
-    "excel": "microsoftexcel",
-    "chatgpt": "openai",
-    "gemini": "googlegemini",
-    "claude": "claude",
-    "confluence": "confluence",
-    "google sheets": "googlesheets",
-    "google slides": "googleslides",
-    "notion": "notion",
-    "slack": "slack",
-    "figma": "figma"
-  };
-  function toolChipHTML(name, cls){
-    var slug = TOOL_ICONS[(name || "").trim().toLowerCase()];
-    var icon = slug ? '<img class="tool-icon" src="https://cdn.simpleicons.org/' + slug + '" alt="" onerror="this.remove()">' : "";
-    return '<span class="' + cls + '">' + icon + name + '</span>';
-  }
 
   var state = { type: "", time: "", q: "" };
   var allCases = [];
@@ -393,7 +371,7 @@
   function listCardHTML(c, idx){
     var colorClass = typeColorMap[c.type] || "neutral";
     var typeChip = c.type ? '<span class="cat-chip ' + colorClass + '">' + c.type + '</span>' : "";
-    var toolTags = c.tools.map(function(t){ return toolChipHTML(t, "chip"); }).join("");
+    var toolTags = c.tools.map(function(t){ return '<span class="chip">' + t + '</span>'; }).join("");
     var comingSoon = c.status && c.status.toLowerCase().indexOf("coming") !== -1 ? " · coming soon" : "";
     var thumbChrome = '<div class="thumb-chrome"><span></span><span></span><span></span></div>';
     var thumb = '<div class="list-thumb-wrap"><div class="thumb-frame">' + thumbChrome + (c.images.length
@@ -475,9 +453,7 @@
     var timeBucketPill = c.timeBucket ? '<span class="meta-pill">Spent ' + c.timeBucket + '</span>' : "";
     var timeSavedPill = c.timeSaved ? '<span class="meta-pill saved">Saved ' + c.timeSaved + '</span>' : "";
     var timePills = timeBucketPill + timeSavedPill;
-    var levelPill = c.level ? '<span class="meta-pill">' + c.level + '</span>' : "";
-    var toolPills = c.tools.map(function(t){ return toolChipHTML(t, "meta-pill"); }).join("");
-    var restPills = levelPill + toolPills;
+    var restPills = [c.level].concat(c.tools).filter(Boolean).map(function(m){ return '<span class="meta-pill">' + m + '</span>'; }).join("");
 
     var howToBtn = "";
     var howToPanel = "";
