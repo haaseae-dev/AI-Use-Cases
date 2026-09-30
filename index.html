@@ -229,6 +229,10 @@
         <label for="f-time">Time you've got</label>
         <select id="f-time"><option value="">Any amount</option></select>
       </div>
+      <div class="filter-field">
+        <label for="f-level">Level</label>
+        <select id="f-level"><option value="">Any level</option></select>
+      </div>
     </div>
     <div class="filter-meta">
       <span id="result-count">Loading use cases…</span>
@@ -255,6 +259,7 @@
   var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vReiWK3_4sB-IVIJL2bW0YTOfQ2wgO6UalKSRRj753QR2Xf0O8WE0PfLTDxq0307B8ovjRmRkwrtM2t/pub?gid=962151949&single=true&output=csv";
 
   var TIME_ORDER = ["Under 15 min", "15–60 min", "1–4 hrs", "4–8 hrs", "Days+"];
+  var LEVEL_ORDER = ["Intro", "Intermediate", "Expert"];
   var TYPE_COLORS = ["indigo", "coral", "mint", "amber", "sky"];
   var STORAGE_KEY = "usecases-cache-v4";
 
@@ -264,7 +269,7 @@
     "Brit": "https://www.linkedin.com/in/britvorreiter/"
   };
 
-  var state = { type: "", time: "", q: "" };
+  var state = { type: "", time: "", level: "", q: "" };
   var allCases = [];
   var typeColorMap = {};
 
@@ -276,6 +281,7 @@
   var countEl = document.getElementById("result-count");
   var typeSel = document.getElementById("f-type");
   var timeSel = document.getElementById("f-time");
+  var levelSel = document.getElementById("f-level");
   var searchInput = document.getElementById("search-input");
   var lightbox = document.getElementById("lightbox");
   var lightboxImg = document.getElementById("lightbox-img");
@@ -374,13 +380,16 @@
   function setupFilters(){
     var types = Array.from(new Set(allCases.map(function(c){ return c.type; }).filter(Boolean))).sort();
     var times = TIME_ORDER.filter(function(t){ return allCases.some(function(c){ return c.timeBucket === t; }); });
+    var levels = LEVEL_ORDER.filter(function(l){ return allCases.some(function(c){ return c.level === l; }); });
     populateSelect(typeSel, types, "Any type");
     populateSelect(timeSel, times, "Any amount");
+    populateSelect(levelSel, levels, "Any level");
   }
 
   function matchesFilters(c){
     if (state.type && c.type !== state.type) return false;
     if (state.time && c.timeBucket !== state.time) return false;
+    if (state.level && c.level !== state.level) return false;
     if (state.q){
       var hay = (c.title + " " + c.problem + " " + c.author + " " + c.tools.join(" ") + " " + c.type).toLowerCase();
       if (hay.indexOf(state.q.toLowerCase()) === -1) return false;
@@ -430,13 +439,14 @@
   }
 
   function clearFilters(){
-    state = { type: "", time: "", q: state.q };
-    typeSel.value = ""; timeSel.value = "";
+    state = { type: "", time: "", level: "", q: state.q };
+    typeSel.value = ""; timeSel.value = ""; levelSel.value = "";
     renderList();
   }
   document.getElementById("clear-filters").addEventListener("click", clearFilters);
   typeSel.addEventListener("change", function(){ state.type = typeSel.value; renderList(); });
   timeSel.addEventListener("change", function(){ state.time = timeSel.value; renderList(); });
+  levelSel.addEventListener("change", function(){ state.level = levelSel.value; renderList(); });
   searchInput.addEventListener("input", function(){ state.q = searchInput.value; renderList(); });
 
   lightbox.addEventListener("click", function(){ lightbox.classList.remove("open"); lightboxImg.src = ""; });
