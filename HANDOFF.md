@@ -30,13 +30,14 @@ Columns in `Use Cases`, in order:
 |---|---|
 | `Title` | Use case name |
 | `Author` | `Xan` or `Brit` — matched against a hardcoded `AUTHOR_LINKS` map in the JS for LinkedIn profile links |
+| `Date` | Optional free text (e.g. "Aug 2026") shown as "Updated <value>" under the author's name in the detail-page byline. Blank just omits that line — not required for publishing. |
 | `Type` | Category — drives a color-coded chip. Colors are auto-assigned from a fixed 5-color palette (`indigo, coral, mint, amber, sky`) in the order categories are first encountered, not hand-picked per category. **Wording must match exactly between rows** or it creates a duplicate category (known live data bug right now: `"Reporting"` vs `"Status reporting"`, `"Productivity"` vs `"Personal productivity"`) |
 | `Problem` | Always-visible one-liner |
-| `Build` | "How it was built" paragraph on the detail page |
-| `Tools` | Comma-separated |
-| `Level` | `Intro` / `Intermediate` / `Expert` — shown on detail page only; **the Level filter dropdown was deliberately removed** per explicit request, don't re-add without asking |
-| `Total Effort` | Renamed from `TimeBucket` during the v1 content pass (same column, new label — `index.html` reads it by this exact header name now). Must be exactly one of `Under 15 min`, `15–60 min`, `1–4 hrs`, `4–8 hrs`, `Days+` (note the en-dash). Anything else silently fails to appear in the Time filter dropdown. |
-| `Time Saved` | Optional free text (e.g. "20+ hrs", "about a day") — shown as a highlighted mint-colored pill right next to `Total Effort` on the detail page, and appended to the time on the list card footer. Not required for publishing (same as `TimeDetail`/`Outcome`/`Lessons`), just blank if empty. |
+| `Build` | Populates "The Solution" card on the detail page (paired with a "The Problem" card built from the `Problem` field) — also where the How To Guide / Prompt buttons nest, since they're about how it was built |
+| `Tools` | Comma-separated — rendered as a bordered row of chips on the detail page, between the time stats and the Problem/Solution cards |
+| `Level` | `Intro` / `Intermediate` / `Expert` — shown on the detail page only, as a chip next to the Type chip near the top. **The Level filter dropdown was deliberately removed** per explicit request, don't re-add without asking |
+| `Total Effort` | Renamed from `TimeBucket` during the v1 content pass (same column, new label — `index.html` reads it by this exact header name now). Must be exactly one of `Under 15 min`, `15–60 min`, `1–4 hrs`, `4–8 hrs`, `Days+` (note the en-dash). Anything else silently fails to appear in the Time filter dropdown. Shown on the detail page as a clock icon + "Spent <value>". |
+| `Time Saved` | Optional free text (e.g. "20+ hrs", "about a day") — shown on the detail page as a green lightning-bolt icon + "Saved <value>", next to the Total Effort stat, and appended to the time on the list card footer. Not required for publishing (same as `TimeDetail`/`Outcome`/`Lessons`), just blank if empty. |
 | `TimeDetail` | Optional free-text elaboration |
 | `Outcome`, `Lessons` | Detail-page sections, shown only if non-empty |
 | `Status` | Gates visibility — see "Publish gating" below. Only 3 values do anything meaningful: `Draft` (or blank) hides the row; `Live` (exact match) publishes it normally; anything containing `"coming"` (e.g. `"Coming Soon"`) publishes it with a `" · coming soon"` tag next to the author name. Anything else is treated as not-ready and hidden, same as `Draft`. |
@@ -59,7 +60,8 @@ If anything is hidden for being incomplete, the site shows a small message near 
 
 - **Visual identity is deliberately modeled on Brit's separate "Workflow Hub" project** for brand continuity: Space Grotesk–adjacent headline font (`Bricolage Grotesque`) + `Plus Jakarta Sans` body, indigo/purple accent (`#5B4FE0`), light background, white cards, pill-shaped chips/buttons.
 - **List view → detail view is real navigation**, not an accordion. Clicking a card changes the URL hash to `#/case/<id>` and swaps a `<section>`, giving each use case a shareable link and working back-button behavior, without needing multiple actual HTML files or a router library.
-- **Images**: multiple images render as a click-through carousel (arrows + dots + swipe) on the detail page, NOT a "big image + horizontal scroll strip." That was explicitly tried and explicitly rejected in favor of the carousel.
+- **Images**: multiple images render as a click-through carousel (arrows + dots + swipe) on the detail page, with a row of clickable thumbnails underneath it (added in the Option A layout pass) that jump the carousel to that slide — the thumbnails are an addition on top of the carousel, not a replacement; a "big image + horizontal scroll strip" *instead of* the carousel was explicitly tried earlier and explicitly rejected.
+- **Detail page top section (as of the "Option A" layout pass)**: a byline (avatar + author name + optional "Updated <Date>", linking to the author's LinkedIn if known) sits top-right, opposite the "← Back to browse" link — replacing the old bottom-of-page "Built this use case" row. Below the hero/thumbnails: Type chip + Level chip, title, time-stats row, then a bordered row of Tool chips, then a two-column "The Problem" / "The Solution" card grid (icon-topped headers, stacks to one column on mobile) built from the `Problem` and `Build` fields respectively.
 - **Filters are three dropdowns** (`Type`, `Time you've got`) — actually just two now, `Level` was removed — chosen over pill/chip filters specifically because dropdowns work better as native OS pickers on mobile.
 - **Search box** filters across title, problem, tools, author, and type as-you-type (the problem one-liner is included so a search term that only appears in that sentence still surfaces the card).
 - A previous attempt at a dark/purple theme + this same search+detail structure was built and then explicitly reverted ("nope, go back to what we had") — the reason was never fully diagnosed (color scheme vs. structure), so if dark themes come up again, ask which specifically didn't land rather than assuming.
@@ -80,7 +82,7 @@ If anything is hidden for being incomplete, the site shows a small message near 
 - Site still says `[working name]` — no name has been chosen.
 - `Column Guide` tab in the Sheet is stale (see schema table above).
 - One data-quality typo lives in the Sheet right now (a `Total Effort` row reading `5–8 hrs` instead of `4–8 hrs`) — needs manual fixing in the Sheet, not code.
-- Whether to trim the `Build` ("How it was built") summary down to a one-line teaser for rows that already have a full `HowToGuide` or `PromptFileURL` — discussed, not decided.
+- Whether to trim the `Build` ("The Solution" card) text down to a one-line teaser for rows that already have a full `HowToGuide` or `PromptFileURL` — discussed, not decided.
 - No custom domain — using the default `github.io` URL. A rename of the GitHub repo was deferred until a final site name is chosen (renaming the repo changes the live URL, which would break the printed QR code).
 
 ## If you're Claude Code reading this for the first time
