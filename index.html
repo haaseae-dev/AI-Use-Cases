@@ -65,18 +65,18 @@
   /* ---------- grid + list cards ---------- */
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;padding:22px 0 70px;align-items:start;}
   .list-card{
-    display:flex;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:16px;
-    padding:16px;color:var(--ink);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;
+    display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:16px;
+    overflow:hidden;color:var(--ink);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;
     text-decoration:none;
   }
   .list-card, .list-card *{text-decoration:none;}
-  .list-thumb{width:96px;height:96px;border-radius:10px;flex-shrink:0;object-fit:cover;}
+  .list-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
   .list-thumb-placeholder{
-    width:96px;height:96px;border-radius:10px;flex-shrink:0;border:1.5px dashed var(--border);
+    width:100%;aspect-ratio:16/9;border-bottom:1.5px dashed var(--border);
     display:flex;align-items:center;justify-content:center;color:var(--ink-soft);background:var(--bg);
   }
   .list-thumb-placeholder svg{width:24px;height:24px;opacity:0.6;}
-  .list-card-text{flex:1;min-width:0;}
+  .list-card-text{flex:1;min-width:0;padding:16px;}
   .list-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(28,26,46,0.06);}
   .list-card:focus-visible{outline:2px solid var(--indigo);outline-offset:2px;}
   .cat-chip{align-self:flex-start;display:inline-block;font-weight:700;font-size:11px;padding:4px 11px;border-radius:999px;margin-bottom:11px;}
