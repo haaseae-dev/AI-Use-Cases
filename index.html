@@ -513,15 +513,19 @@
       howToPanel = '<div class="howto-panel" id="howto-panel"><div class="howto-content">' + renderMarkdown(c.howTo) + '</div></div>';
     }
     var promptBtn = "";
-    if (c.guideFileUrl){
+    var promptPanel = "";
+    if (c.guideFileUrl && isBareUrl(c.guideFileUrl)){
       promptBtn =
         '<a class="card-btn" href="' + c.guideFileUrl + '" target="_blank" rel="noopener">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
           'Prompt' +
         '</a>';
+    } else if (c.guideFileUrl){
+      promptBtn = '<button class="card-btn" id="prompt-btn" type="button" data-show="Show the prompt" data-hide="Hide it">Show the prompt</button>';
+      promptPanel = '<div class="howto-panel" id="prompt-panel"><div class="howto-content">' + renderMarkdown(c.guideFileUrl) + '</div></div>';
     }
     var btnRow = (howToBtn || promptBtn) ? '<div class="card-btn-row">' + howToBtn + promptBtn + '</div>' : "";
-    var guideExtras = btnRow + howToPanel;
+    var guideExtras = btnRow + howToPanel + promptPanel;
 
     var splitCards =
       '<div class="split-grid">' +
@@ -557,14 +561,18 @@
       splitCards + cards +
       '<div class="detail-bottom-byline">' + byline + '</div>';
 
-    var btn = document.getElementById("howto-btn");
-    var panel = document.getElementById("howto-panel");
-    if (btn && panel){
-      btn.addEventListener("click", function(){
-        var open = panel.classList.toggle("open");
-        btn.textContent = open ? btn.getAttribute("data-hide") : btn.getAttribute("data-show");
-      });
+    function wireToggle(btnId, panelId){
+      var btn = document.getElementById(btnId);
+      var panel = document.getElementById(panelId);
+      if (btn && panel){
+        btn.addEventListener("click", function(){
+          var open = panel.classList.toggle("open");
+          btn.textContent = open ? btn.getAttribute("data-hide") : btn.getAttribute("data-show");
+        });
+      }
     }
+    wireToggle("howto-btn", "howto-panel");
+    wireToggle("prompt-btn", "prompt-panel");
     detailContent.querySelectorAll(".hero-shot").forEach(function(img){
       img.addEventListener("click", function(){ lightboxImg.src = img.src; lightbox.classList.add("open"); });
     });
