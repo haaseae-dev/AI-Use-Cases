@@ -379,10 +379,19 @@
     values.forEach(function(v){ var o = document.createElement("option"); o.value = v; o.textContent = v; sel.appendChild(o); });
   }
 
+  // Sorts by a preferred order when a value matches it, but never drops a value just because
+  // it doesn't match — unlike filtering against a fixed list, a typo or new value in the Sheet
+  // still shows up (alphabetically, after the known ones) instead of silently disappearing.
+  function sortWithPreference(values, preferredOrder){
+    var known = preferredOrder.filter(function(v){ return values.indexOf(v) !== -1; });
+    var unknown = values.filter(function(v){ return preferredOrder.indexOf(v) === -1; }).sort();
+    return known.concat(unknown);
+  }
+
   function setupFilters(){
     var types = Array.from(new Set(allCases.map(function(c){ return c.type; }).filter(Boolean))).sort();
-    var times = TIME_ORDER.filter(function(t){ return allCases.some(function(c){ return c.timeBucket === t; }); });
-    var levels = LEVEL_ORDER.filter(function(l){ return allCases.some(function(c){ return c.level === l; }); });
+    var times = sortWithPreference(Array.from(new Set(allCases.map(function(c){ return c.timeBucket; }).filter(Boolean))), TIME_ORDER);
+    var levels = sortWithPreference(Array.from(new Set(allCases.map(function(c){ return c.level; }).filter(Boolean))), LEVEL_ORDER);
     populateSelect(typeSel, types, "Any type");
     populateSelect(timeSel, times, "Any amount");
     populateSelect(levelSel, levels, "Any level");
@@ -402,6 +411,7 @@
   function listCardHTML(c, idx){
     var colorClass = typeColorMap[c.type] || "neutral";
     var typeChip = c.type ? '<span class="cat-chip ' + colorClass + '">' + c.type + '</span>' : "";
+    var levelChip = c.level ? '<span class="chip">' + c.level + '</span>' : "";
     var toolTags = c.tools.map(function(t){ return '<span class="chip">' + t + '</span>'; }).join("");
     var comingSoon = c.status && c.status.toLowerCase().indexOf("coming") !== -1 ? " · coming soon" : "";
     var footTimeBit = c.timeBucket
@@ -418,7 +428,7 @@
       '<a class="list-card entrance" href="#/case/' + c.id + '" style="animation-delay:' + Math.min(idx * 25, 220) + 'ms">' +
         thumb +
         '<div class="list-card-text">' +
-          typeChip +
+          '<div class="detail-top-chips">' + typeChip + levelChip + '</div>' +
           '<h3 class="list-title">' + c.title + '</h3>' +
           '<p class="list-body">' + c.problem + '</p>' +
           '<div class="list-meta">' + toolTags + '</div>' +
