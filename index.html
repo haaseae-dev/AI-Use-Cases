@@ -380,7 +380,7 @@
           '<h3 class="list-title">' + c.title + '</h3>' +
           '<p class="list-body">' + c.problem + '</p>' +
           '<div class="list-meta">' + toolTags + '</div>' +
-          '<div class="list-foot"><span>' + c.author + comingSoon + '</span><span>' + (c.timeBucket || "") + (c.timeSaved ? ' <span style="color:#0C7A6D">&middot; Saved ' + c.timeSaved + '</span>' : "") + '</span></div>' +
+          '<div class="list-foot"><span>' + c.author + comingSoon + '</span><span>' + (c.timeBucket ? 'Effort: ' + c.timeBucket : "") + (c.timeSaved ? ' <span style="color:#0C7A6D">&middot; Saved ' + c.timeSaved + '</span>' : "") + '</span></div>' +
         '</div>' +
       '</a>'
     );
