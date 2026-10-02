@@ -345,13 +345,21 @@
       && r.Tools && r.Tools.trim() && r["Total Effort"] && r["Total Effort"].trim());
   }
 
+  // Parses the Sheet's "MM/YYYY" Date column into a sortable key. Anything missing or
+  // unparseable sorts last rather than jumping to the top, so a typo can't masquerade as "newest".
+  function parseDateKey(dateStr){
+    var m = /^(\d{1,2})\/(\d{4})$/.exec((dateStr || "").trim());
+    if (!m) return -Infinity;
+    return parseInt(m[2], 10) * 12 + parseInt(m[1], 10);
+  }
+
   function normalizeRows(rows){
     var hiddenIncomplete = 0, hiddenDraft = 0;
     var cases = rows.filter(function(r){ return r.Title && r.Title.trim(); }).filter(function(r){
       if (!isPublishable(r.Status)){ hiddenDraft++; return false; }
       if (!isComplete(r)){ hiddenIncomplete++; return false; }
       return true;
-    }).map(function(r, i){
+    }).sort(function(a, b){ return parseDateKey(b.Date) - parseDateKey(a.Date); }).map(function(r, i){
       return {
         id: "case-" + i,
         title: (r.Title || "").trim(),
