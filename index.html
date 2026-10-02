@@ -34,11 +34,6 @@
   .origin{font-size:12px;color:var(--ink-soft);margin-top:14px;}
   .origin a{color:var(--ink);font-weight:600;}
 
-  .hero-stats{display:flex;gap:36px;padding:4px 0 18px;}
-  .hero-stat{display:flex;flex-direction:column;}
-  .hero-stat-num{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px;color:var(--ink);line-height:1.2;}
-  .hero-stat-label{font-size:12px;color:var(--ink-soft);margin-top:2px;}
-
   /* ---------- search ---------- */
   .search-row{padding:26px 0 12px;}
   .search-box{position:relative;}
@@ -230,11 +225,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <input type="text" id="search-input" placeholder="Search use cases, tools, or people…">
       </div>
-    </div>
-
-    <div class="hero-stats">
-      <div class="hero-stat"><span class="hero-stat-num" id="stat-usecases">&ndash;</span><span class="hero-stat-label" id="stat-usecases-label">use cases</span></div>
-      <div class="hero-stat"><span class="hero-stat-num" id="stat-builders">&ndash;</span><span class="hero-stat-label" id="stat-builders-label">builders</span></div>
     </div>
 
     <div class="filter-bar">
@@ -704,11 +694,6 @@
     allCases = normalizeRows(rows);
     assignTypeColors();
     setupFilters();
-    var builderCount = Array.from(new Set(allCases.map(function(c){ return c.author; }).filter(Boolean))).length;
-    document.getElementById("stat-usecases").textContent = allCases.length;
-    document.getElementById("stat-usecases-label").textContent = allCases.length === 1 ? "use case" : "use cases";
-    document.getElementById("stat-builders").textContent = builderCount;
-    document.getElementById("stat-builders-label").textContent = builderCount === 1 ? "builder" : "builders";
     if (allCases.length === 0 && allCases.hiddenIncomplete === 0 && allCases.hiddenDraft === 0){
       showStatus("No use cases published yet — check back soon.", false);
     } else if (fromCache){
