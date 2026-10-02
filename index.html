@@ -381,7 +381,8 @@
         howTo: (r.HowToGuide || "").trim(),
         howToLabel: (r["HowToGuide-Label"] || "").trim(),
         guideFileUrl: (r.PromptFileURL || "").trim(),
-        guideFileLabel: (r["PromptFile-Label"] || "").trim()
+        guideFileLabel: (r["PromptFile-Label"] || "").trim(),
+        skillUrl: (r.SkillURL || "").trim()
       };
     });
     cases.hiddenIncomplete = hiddenIncomplete;
@@ -570,7 +571,13 @@
       promptBtn = '<button class="card-btn" id="prompt-btn" type="button" data-show="Show the prompt" data-hide="Hide it">Show the prompt</button>';
       promptPanel = '<div class="howto-panel" id="prompt-panel"><div class="howto-content">' + renderMarkdown(c.guideFileUrl) + '</div></div>';
     }
-    var btnRow = (howToBtn || promptBtn) ? '<div class="card-btn-row">' + howToBtn + promptBtn + '</div>' : "";
+    var skillBtn = c.skillUrl
+      ? '<a class="card-btn" href="' + c.skillUrl + '" download>' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
+          'Download the Skill' +
+        '</a>'
+      : "";
+    var btnRow = (howToBtn || promptBtn || skillBtn) ? '<div class="card-btn-row">' + howToBtn + promptBtn + skillBtn + '</div>' : "";
     var guideExtras = btnRow + howToPanel + promptPanel;
 
     var splitCards =
