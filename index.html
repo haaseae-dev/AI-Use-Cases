@@ -284,6 +284,7 @@
   var TIME_ORDER = ["0–60 min", "1–4 hrs", "5–8 hrs", "Days+"];
   var LEVEL_ORDER = ["Beginner", "Intermediate", "Expert"];
   var PROMPT_DOWNLOAD_THRESHOLD = 500; // chars — longer plain-text prompts become a download instead of an inline toggle
+  var HOWTO_DOWNLOAD_THRESHOLD = 6000; // chars — a normal guide reads fine inline; a multi-page doc becomes a download instead
   var TYPE_COLORS = ["indigo", "coral", "mint", "amber", "sky"];
   var STORAGE_KEY = "usecases-cache-v4";
 
@@ -550,6 +551,12 @@
         '<a class="card-btn" href="' + c.howTo + '" target="_blank" rel="noopener">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
           'How To Guide' +
+        '</a>';
+    } else if (c.howTo && c.howTo.length > HOWTO_DOWNLOAD_THRESHOLD){
+      howToBtn =
+        '<a class="card-btn" href="data:text/plain;charset=utf-8,' + encodeURIComponent(c.howTo) + '" download="' + slugify(c.title) + '-how-to.txt">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
+          'Download the How-To Guide' +
         '</a>';
     } else if (c.howTo){
       howToBtn = '<button class="card-btn" id="howto-btn" type="button" data-show="Show the full step-by-step guide" data-hide="Hide it">Show the full step-by-step guide</button>';
