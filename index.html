@@ -113,9 +113,10 @@
   .empty-state button{margin-top:12px;background:var(--ink);color:var(--bg);border:none;padding:9px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;}
 
   footer{border-top:1px solid var(--border);padding:26px 0 60px;font-size:13px;color:var(--ink-soft);}
+  footer .disclaimer{margin-top:8px;font-size:11.5px;color:var(--ink-soft);opacity:0.8;max-width:60ch;}
 
   /* ---------- detail view ---------- */
-  #view-detail{display:none;padding:36px 0 80px;}
+  #view-detail{display:none;padding:36px 0 0;}
   .back-link{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--ink-soft);font-weight:600;
     margin-bottom:22px;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;}
   .back-link:hover{color:var(--ink);}
@@ -258,12 +259,18 @@
 
     <div class="grid" id="grid"></div>
   </div>
-  <footer><div class="wrap">Have something worth adding? <a href="mailto:brit.vorr@gmail.com">Tell Xan or Brit</a>.</div></footer>
+  <footer><div class="wrap">
+    <div>Have something worth adding? <a href="mailto:brit.vorr@gmail.com">Tell Xan or Brit</a>.</div>
+    <div class="disclaimer">Everything shown here uses dummy data or personal projects we built ourselves. Nothing is affiliated with, sourced from, or represents any employer or company — proprietary details have been stripped out.</div>
+  </div></footer>
 </section>
 
 <!-- ================= DETAIL VIEW ================= -->
 <section id="view-detail">
   <div class="wrap" id="detail-content"></div>
+  <footer><div class="wrap">
+    <div class="disclaimer">Everything shown here uses dummy data or personal projects we built ourselves. Nothing is affiliated with, sourced from, or represents any employer or company — proprietary details have been stripped out.</div>
+  </div></footer>
 </section>
 
 <div class="lightbox" id="lightbox"><img id="lightbox-img" src="" alt=""></div>
