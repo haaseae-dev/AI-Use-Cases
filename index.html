@@ -168,7 +168,10 @@
 
   .detail-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:14px;}
   .detail-card h4{font-size:11.5px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;color:var(--indigo);margin:0 0 8px;}
-  .detail-card p{font-size:14px;color:var(--ink-soft);line-height:1.65;margin:0;white-space:pre-line;}
+  .detail-card p{font-size:14px;color:var(--ink-soft);line-height:1.65;margin:0 0 10px;white-space:pre-line;}
+  .detail-card ul,.detail-card ol{margin:0 0 10px;padding-left:22px;font-size:14px;color:var(--ink-soft);line-height:1.65;}
+  .detail-card li{margin-bottom:6px;}
+  .detail-card p:last-child,.detail-card ul:last-child,.detail-card ol:last-child{margin-bottom:0;}
 
   .avatar{width:28px;height:28px;border-radius:50%;background:var(--indigo);color:#fff;font-family:'Bricolage Grotesque',sans-serif;
     font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -558,18 +561,18 @@
     var guideExtras = btnRow + howToPanel + promptPanel;
 
     var splitCards =
-      '<div class="detail-card"><div class="split-card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg><h4>The Problem</h4></div><p>' + c.problem + '</p></div>' +
+      '<div class="detail-card"><div class="split-card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg><h4>The Problem</h4></div>' + renderMarkdown(c.problem) + '</div>' +
       '<div class="detail-card"><div class="split-card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg><h4>The Solution</h4></div>' +
-        (c.build ? '<p>' + c.build + '</p>' : "") + guideExtras +
+        (c.build ? renderMarkdown(c.build) : "") + guideExtras +
       '</div>';
 
     var outcomeLessons = "";
-    if (c.outcome) outcomeLessons += '<div class="detail-card"><h4>Outcome</h4><p>' + c.outcome + '</p></div>';
-    if (c.lessons) outcomeLessons += '<div class="detail-card"><h4>Lessons learned</h4><p>' + c.lessons + '</p></div>';
+    if (c.outcome) outcomeLessons += '<div class="detail-card"><h4>Outcome</h4>' + renderMarkdown(c.outcome) + '</div>';
+    if (c.lessons) outcomeLessons += '<div class="detail-card"><h4>Lessons learned</h4>' + renderMarkdown(c.lessons) + '</div>';
     if (outcomeLessons) outcomeLessons = '<div class="split-grid">' + outcomeLessons + '</div>';
 
     var cards = "";
-    if (c.timeDetail) cards += '<div class="detail-card"><h4>Time invested</h4><p>' + c.timeDetail + '</p></div>';
+    if (c.timeDetail) cards += '<div class="detail-card"><h4>Time invested</h4>' + renderMarkdown(c.timeDetail) + '</div>';
 
     var liUrl = AUTHOR_LINKS[c.author];
     var bylineInner =
