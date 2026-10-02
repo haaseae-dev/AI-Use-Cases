@@ -287,13 +287,6 @@
   var HOWTO_DOWNLOAD_THRESHOLD = 6000; // chars — a normal guide reads fine inline; a multi-page doc becomes a download instead
   var TYPE_COLORS = ["indigo", "coral", "mint", "amber", "sky"];
   var STORAGE_KEY = "usecases-cache-v4";
-  var activeDetailBlobUrls = [];
-  function makeDownloadUrl(text){
-    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    var url = URL.createObjectURL(blob);
-    activeDetailBlobUrls.push(url);
-    return url;
-  }
 
   // Optional: map an author's name to their LinkedIn URL, shown on the detail page.
   var AUTHOR_LINKS = {
@@ -509,8 +502,6 @@
   }
 
   function renderDetail(id){
-    activeDetailBlobUrls.forEach(function(u){ URL.revokeObjectURL(u); });
-    activeDetailBlobUrls = [];
     var c = allCases.filter(function(x){ return x.id === id; })[0];
     if (!c){
       detailContent.innerHTML = '<button class="back-link" onclick="location.hash=\'\'">← Back to browse</button><p style="color:var(--ink-soft)">That use case isn\'t here — it may have moved.</p>';
@@ -563,7 +554,7 @@
         '</a>';
     } else if (c.howTo && c.howTo.length > HOWTO_DOWNLOAD_THRESHOLD){
       howToBtn =
-        '<a class="card-btn" href="' + makeDownloadUrl(c.howTo) + '" download="' + slugify(c.title) + '-how-to.txt">' +
+        '<a class="card-btn" id="howto-download-btn" href="#" download="' + slugify(c.title) + '-how-to.txt">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
           'Download the How-To Guide' +
         '</a>';
@@ -581,7 +572,7 @@
         '</a>';
     } else if (c.guideFileUrl && c.guideFileUrl.length > PROMPT_DOWNLOAD_THRESHOLD){
       promptBtn =
-        '<a class="card-btn" href="' + makeDownloadUrl(c.guideFileUrl) + '" download="' + slugify(c.title) + '-prompt.txt">' +
+        '<a class="card-btn" id="prompt-download-btn" href="#" download="' + slugify(c.title) + '-prompt.txt">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>' +
           'Download the Prompt' +
         '</a>';
@@ -639,6 +630,24 @@
     }
     wireToggle("howto-btn", "howto-panel");
     wireToggle("prompt-btn", "prompt-panel");
+
+    // Generates a fresh Blob URL on every click rather than once at render time —
+    // a blob: URL created once and reused can go stale on mobile after the first
+    // successful download (e.g. once the tab backgrounds), making repeat taps fail.
+    function wireFreshDownload(linkId, text, filename){
+      var a = document.getElementById(linkId);
+      if (!a) return;
+      a.addEventListener("click", function(){
+        var staleUrl = a.getAttribute("data-blob-url");
+        if (staleUrl) URL.revokeObjectURL(staleUrl);
+        var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        a.href = url;
+        a.setAttribute("data-blob-url", url);
+      });
+    }
+    wireFreshDownload("howto-download-btn", c.howTo, slugify(c.title) + "-how-to.txt");
+    wireFreshDownload("prompt-download-btn", c.guideFileUrl, slugify(c.title) + "-prompt.txt");
     detailContent.querySelectorAll(".hero-shot").forEach(function(img){
       img.addEventListener("click", function(){ lightboxImg.src = img.src; lightbox.classList.add("open"); });
     });
